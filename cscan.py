@@ -6,10 +6,9 @@ import sys
 import argparse
 import threading
 
-
-headers={
+headers = {
     'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36',
-    'Connection':'close'
+    'Connection': 'close'
 }
 
 portlist = [
@@ -20,18 +19,20 @@ portlist = [
     3505, 7080, 8484, 9003
 ]
 
+
 def iplist(ip):
-    urllist=[]
+    urllist = []
     iplist = IPy.IP(ip)
     for ip in iplist[1:-1]:
         for port in portlist:
-            urllist.append('http://'+str(ip)+':'+str(port))
+            urllist.append('http://' + str(ip) + ':' + str(port))
     return urllist
+
 
 def scan(start, end, urllist, lockObj):
     for i in range(int(start), int(end)):
         try:
-            r = requests.session().get(url=urllist[i],headers=headers,timeout=5)
+            r = requests.session().get(url=urllist[i], headers=headers, timeout=5)
             status = r.status_code
             if status != 404 and status != 403 and status != 400 and status != 502:
                 title = re.search(r'<title>(.*)</title>', r.content.decode())
@@ -45,11 +46,12 @@ def scan(start, end, urllist, lockObj):
                 except:
                     pass
                 lockObj.acquire()
-                print ("|%-29s|%-6s|%-24s|%-35s" % (urllist[i],status,banner,title))
+                print("|%-29s|%-6s|%-24s|%-35s" % (urllist[i], status, banner, title))
                 lockObj.release()
         except:
             pass
-    
+
+
 def main():
     print(r'''
   ___ ___  ___ __ _ _ __
@@ -61,17 +63,19 @@ def main():
           ''')
     parser = argparse.ArgumentParser(description='cscan based on httpscan')
     parser.add_argument('-i', '--ip', required=True, help='target ip or ip segment')
-    parser.add_argument('-t', '--thread', required=False, default = 100, help='number of threads,default = 100')
+    parser.add_argument('-t', '--thread', required=False, default=100, help='number of threads,default = 100')
     args = parser.parse_args()
     ip = args.ip
     numbers = args.thread
-    print ('|IP                           |Status|Server                  |Title')
+    print('|IP                           |Status|Server                  |Title')
     url = iplist(ip)
     lock = threading.Lock()
     for i in range(int(numbers)):
         if i == int(numbers) - 1:
             threading.Thread(target=scan, args=(i * len(url) / int(numbers), len(url), url, lock)).start()
-        threading.Thread(target=scan, args=(i * len(url) / int(numbers), (i + 1) * len(url) / int(numbers) - 1, url, lock)).start()
-        
+        threading.Thread(target=scan,
+                         args=(i * len(url) / int(numbers), (i + 1) * len(url) / int(numbers) - 1, url, lock)).start()
+
+
 if __name__ == '__main__':
     main()
