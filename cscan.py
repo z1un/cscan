@@ -2,7 +2,6 @@
 import requests
 import re
 import IPy
-import sys
 import argparse
 import threading
 

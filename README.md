@@ -2,7 +2,7 @@
 
 基于`python3`和[httpscan](https://github.com/zer0h/httpscan#httpscan)的多端口c段扫描器。
 
-![](demo/1.png)
+![](https://i.loli.net/2020/08/14/rmvJuNkgAbRcQTw.png)
 
 **用法**：`python cscan.py -i IP/CIDR –t threads`
 
@@ -10,4 +10,5 @@
 
 默认线程为100
 
-![](demo/2.png)
+![](https://i.loli.net/2020/08/14/rmvJuNkgAbRcQTw.png)
+
