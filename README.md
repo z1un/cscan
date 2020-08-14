@@ -10,5 +10,3 @@
 
 默认线程为100
 
-![](https://i.loli.net/2020/08/14/rmvJuNkgAbRcQTw.png)
-
